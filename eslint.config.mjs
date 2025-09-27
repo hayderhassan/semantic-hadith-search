@@ -36,10 +36,26 @@ export default defineConfig([
 			"@typescript-eslint": tseslint.plugin,
 			import: importPlugin,
 		},
+		settings: {
+			"import/resolver": {
+				alias: {
+					map: [["@", "./src"]],
+					extensions: [".js", ".jsx", ".ts", ".tsx"],
+				},
+			},
+		},
 		rules: {
 			...tseslint.configs.recommendedTypeChecked.rules,
 			"import/order": ["warn", { groups: ["builtin", "external", "internal"] }],
 			"import/no-unresolved": "error",
+			"no-unused-vars": [
+				"error",
+				{
+					varsIgnorePattern: "^_",
+					argsIgnorePattern: "^_",
+					caughtErrorsIgnorePattern: "^_",
+				},
+			],
 		},
 	},
 	{
