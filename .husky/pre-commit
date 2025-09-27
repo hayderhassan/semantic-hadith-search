@@ -1,0 +1,7 @@
+if find . -type f \( -name "*.test.ts" -o -name "*.spec.ts" \) | grep -q .; then
+  pnpm test || exit 1
+else
+  echo "No test files found. Skipping tests."
+fi
+
+pnpm lint || exit 1

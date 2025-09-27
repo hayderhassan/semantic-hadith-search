@@ -1,0 +1,13 @@
+node_modules
+dist
+out
+build
+.next
+.husky
+.git
+coverage
+*.lock
+*.snap
+src/components/ui
+package-lock.json
+pnpm-lock.yaml

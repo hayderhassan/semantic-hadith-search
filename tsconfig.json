@@ -1,0 +1,53 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"lib": ["ES2022", "DOM"],
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"jsx": "preserve",
+		"types": ["react", "react-dom"],
+		"strict": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"exactOptionalPropertyTypes": true,
+		"strictFunctionTypes": true,
+		"noUncheckedIndexedAccess": true,
+		"useUnknownInCatchVariables": true,
+		"noFallthroughCasesInSwitch": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"forceConsistentCasingInFileNames": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"]
+		},
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"isolatedModules": true,
+		"allowJs": true,
+		"noEmit": true,
+		"incremental": true,
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"pretty": true,
+		"skipLibCheck": true
+	},
+	"include": [
+		"next-env.d.ts",
+		"next.config.ts",
+		"vitest.config.mts",
+		"postcss.config.mjs",
+		"eslint.config.mjs",
+		"src",
+		"scripts",
+		".next/types/**/*.ts",
+		"./*.{js,ts,jsx,tsx}"
+	],
+	"exclude": ["node_modules"]
+}
