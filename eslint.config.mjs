@@ -48,6 +48,14 @@ export default defineConfig([
 			...tseslint.configs.recommendedTypeChecked.rules,
 			"import/order": ["warn", { groups: ["builtin", "external", "internal"] }],
 			"import/no-unresolved": "error",
+			"no-unused-vars": [
+				"error",
+				{
+					varsIgnorePattern: "^_",
+					argsIgnorePattern: "^_",
+					caughtErrorsIgnorePattern: "^_",
+				},
+			],
 		},
 	},
 	{
