@@ -1,85 +1,47 @@
-// import { OntologyKey } from "./ontology";
-//
-// export type SearchPayload = {
-// 	query: string;
-// 	filters: Partial<Record<OntologyKey, string>>;
-// };
-//
-// export type HadithResult = {
-// 	id: string;
-// 	text: string;
-// 	source: string;
-// 	narrator: string;
-// 	authenticity: string;
-// };
-//
-// export async function searchHadiths(payload: SearchPayload): Promise<HadithResult[]> {
-// 	console.log("Searching with payload:", payload);
-//
-// 	// Simulated delay
-// 	await new Promise((res) => setTimeout(res, 500));
-//
-// 	// Mocked results
-// 	return [
-// 		{
-// 			id: "1",
-// 			text: "The Prophet said: Actions are judged by intentions.",
-// 			source: "Bukhari",
-// 			narrator: "Umar ibn al-Khattab",
-// 			authenticity: "Sahih",
-// 		},
-// 		{
-// 			id: "2",
-// 			text: "Charity does not decrease wealth.",
-// 			source: "Muslim",
-// 			narrator: "Abu Huraira",
-// 			authenticity: "Sahih",
-// 		},
-// 	];
-// }
-//
+import hadithsDataRaw from "@/data/hadiths.json";
+import type { HadithsByBook } from "@/types/Hadith";
+import type { SearchPayload, HadithResult } from "@/types/Search";
 
-// import { OntologyKey } from "./ontology";
-import type { SearchPayload, HadithResult } from "./search";
-
-const mockData: HadithResult[] = [
-	{
-		id: "1",
-		text: "The Prophet said: Actions are judged by intentions.",
-		source: "Bukhari",
-		narrator: "Umar ibn al-Khattab",
-		authenticity: "Sahih",
-	},
-	{
-		id: "2",
-		text: "Charity does not decrease wealth.",
-		source: "Muslim",
-		narrator: "Abu Huraira",
-		authenticity: "Sahih",
-	},
-	{
-		id: "3",
-		text: "Speak the truth even if it is bitter.",
-		source: "Tirmidhi",
-		narrator: "Ibn Abbas",
-		authenticity: "Hasan",
-	},
-];
+const hadithsData = hadithsDataRaw as unknown as HadithsByBook;
 
 export async function searchHadiths(payload: SearchPayload): Promise<HadithResult[]> {
 	const { query, filters } = payload;
+	const results: HadithResult[] = [];
 
-	await new Promise((res) => setTimeout(res, 300));
+	for (const bookSlug in hadithsData) {
+		if (filters.book && filters.book !== bookSlug) continue;
 
-	return mockData.filter((hadith) => {
-		const matchesQuery =
-			query.trim() === "" || hadith.text.toLowerCase().includes(query.toLowerCase());
+		const hadiths = hadithsData[bookSlug];
+		if (!Array.isArray(hadiths)) continue;
 
-		const matchesFilters = Object.entries(filters).every(([key, value]) => {
-			const hadithValue = (hadith as any)[key];
-			return value === "" || hadithValue?.toLowerCase() === value.toLowerCase();
-		});
+		for (const hadith of hadiths) {
+			if (filters.chapter && hadith.chapterId !== filters.chapter) continue;
+			if (filters.status && hadith.status !== filters.status) continue;
 
-		return matchesQuery && matchesFilters;
-	});
+			const textMatch =
+				!query ||
+				hadith.hadithEnglish?.toLowerCase().includes(query.toLowerCase()) ||
+				hadith.hadithArabic?.includes(query) ||
+				hadith.hadithUrdu?.includes(query);
+
+			if (textMatch) {
+				results.push({
+					id: `${bookSlug}-${hadith.hadithNumber}`,
+					text:
+						hadith.hadithEnglish ??
+						hadith.hadithArabic ??
+						hadith.hadithUrdu ??
+						hadith.headingEnglish ??
+						hadith.headingArabic ??
+						hadith.headingUrdu ??
+						"No text available",
+					narrator: hadith.englishNarrator || hadith.urduNarrator || "Unknown",
+					source: hadith.book.bookName,
+					authenticity: hadith.status ?? "Unspecified",
+				});
+			}
+		}
+	}
+
+	return results;
 }

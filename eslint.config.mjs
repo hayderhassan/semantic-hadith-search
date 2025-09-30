@@ -10,7 +10,15 @@ import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import { defineConfig, globalIgnores } from "eslint/config";
 
-export const ignorePattern = [".husky/", ".next/", "out/", "build/", "src/components/ui/"];
+export const ignorePattern = [
+	".husky/",
+	".next/",
+	"out/",
+	"build/",
+	"src/components/ui/",
+	"src/data/",
+	"public/",
+];
 
 export default defineConfig([
 	globalIgnores(ignorePattern),
